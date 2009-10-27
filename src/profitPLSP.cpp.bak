@@ -1,0 +1,24 @@
+#include "core/objConv.hpp"
+#include "profitPLSP.hpp"
+
+using namespace blitz;
+using namespace objConv;
+typedef boost::python::list list;
+
+/**< Default constructor */
+profitPLSP::profitPLSP(list intercept, list _slope, Array<double,2>* _price):
+shapeLSS(intercept,_price)
+{
+    slope = new Array<double,2>((*ObjToArray(_slope)));
+}
+/** Copy constructor */
+profitPLSP::profitPLSP(const profitPLSP& origin):shapeLSS(origin)
+{
+    slope = new Array<double,2>((*origin.slope));
+}
+/**< Methods to get demand value*/
+inline double profitPLSP::getDemand(int j, int t) {return (*slope)(j,t)*(*price)(j,t)+(*intercept)(j,t);}
+/**< Methods to get the slope of the demand function*/
+inline double profitPLSP::getSlope(int j, int t){return (*slope)(j,t);}
+/**< Methods to the intercept fo the demand function*/
+inline double profitPLSP::getIntercept(int j, int t){return (*intercept)(j,t);}

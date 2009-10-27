@@ -1,0 +1,25 @@
+#ifndef H_PROFIT_H
+#define H_PROFIT_H
+
+#include "core/shapeLSS.hpp"
+
+/**
+ * @brief This class specify shapeLSS
+ * to manage linear demand function
+ * @author Guillaume Lanquepin <guillaume@himolde.no>
+ * @version 0.1
+ */
+class profitPLSP: virtual public shapeLSS
+{
+    protected:
+        blitz::Array<double,2>* slope;/**< demand is now an linear function, thus we define slope*/
+    public:
+        /** Default constructor */
+        profitPLSP(boost::python::list intercept,
+                    boost::python::list slope, blitz::Array<double,2>* price);
+        profitPLSP(const profitPLSP& origin);/** Copy constructor */
+        virtual inline double getDemand(int j, int t);/**< Methods to get demand value*/
+        inline double getSlope(int j, int t);/**< Methods to get the slope of the demand function*/
+        inline double getIntercept(int j, int t);/**< Methods to the intercept fo the demand function*/
+};
+#endif

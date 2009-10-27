@@ -1,0 +1,28 @@
+#ifndef H_LSP_H
+#define H_LSP_H
+
+#include "core/coreLSS.hpp"
+
+/**
+ * @brief This class specify coreLSS to
+ * manage simple Lot-size problen.
+ * @author Guillaume Lanquepin <guillaume@himolde.no>
+ * @version 0.1
+ */
+template <class data>
+class LSP: virtual public coreLSS<data>
+{
+    protected:
+        void initVariables() ;/**< Initiate all variables */
+        blitz::Array<double,2>* initPrice();/**< Initiate price in solve() (pure abstract) */
+        /** Compute cost in solve() (pure abstract) */
+        double computeCost(blitz::Array<double,2> tprice,int t, int t0, int j);
+        double computePrice(int t, int t0, int j);/**< Compute Price in solve() (pure abstract) */
+    public:
+        /** Default constructeur */
+        LSP(data demand, data prod,
+            data stor, data consumption,
+            data setup, data constraint,
+            int period, int product);
+};
+#endif

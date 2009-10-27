@@ -1,0 +1,40 @@
+#include "LSP.hpp"
+
+using namespace blitz;
+
+template <class data>
+LSP<data>::LSP(data demand, data prod, data stor, data consumption,
+    data setup, data constraint, int period, int product):
+    coreLSS<data>::coreLSS(demand,prod,stor,consumption,setup,constraint,period,product)
+    {}
+template <class data>
+void LSP<data>::initVariables()
+{
+    (*coreLSS<data>::storage) = 0;
+    (*coreLSS<data>::production) = 0;
+    (*coreLSS<data>::price) = coreLSS<data>::profit -> getDemand() -> copy();
+}
+template <class data>
+Array<double,2>* LSP<data>::initPrice()
+{
+    return coreLSS<data>::profit -> getDemand();
+}
+template <class data>
+double LSP<data>::computeCost(Array<double,2> tprice, int t, int t0, int j)
+{
+    double cost = 0;
+    for (int i = t0; i <= t; i++)
+    {
+        cost += ((*coreLSS<data>::prod)(j,t0)
+            + sum((*coreLSS<data>::stor)(j,Range(t0,i-1))))
+            * coreLSS<data>::profit -> getDemand(j,t) * tprice(i,t0);
+    }
+    cost += (*coreLSS<data>::setup)(j,t0);
+    return cost;
+}
+template <class data>
+double LSP<data>::computePrice(int t, int t0, int j)
+{
+    return (*coreLSS<data>::price)(j,t);
+}
+
